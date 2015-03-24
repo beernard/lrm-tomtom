@@ -3,13 +3,12 @@
 
 	var L = require('leaflet');
 	var corslite = require('corslite');
-	var polyline = require('polyline');
 
 	L.Routing = L.Routing || {};
 
-	L.Routing.GraphHopper = L.Class.extend({
+	L.Routing.TomTom = L.Class.extend({
 		options: {
-			serviceUrl: 'https://graphhopper.com/api/1/route',
+			serviceUrl: 'https://api.tomtom.com/routing/1/calculateRoute',
 			timeout: 30 * 1000
 		},
 
@@ -33,7 +32,7 @@
 								timedOut = true;
 								callback.call(context || callback, {
 									status: -1,
-									message: 'GraphHopper request timed out.'
+									message: 'TomTom request timed out.'
 								});
 							}, this.options.timeout);
 
@@ -77,17 +76,16 @@
 			    path;
 
 			context = context || callback;
-			if (response.info.errors && response.info.errors.length) {
+			if (response.error && response.error.description) {
 				callback.call(context, {
-					// TODO: include all errors
-					status: response.info.errors[0].details,
-					message: response.info.errors[0].message
+					status: response.statusCode,
+					message: response.error.description
 				});
 				return;
 			}
 
-			for (i = 0; i < response.paths.length; i++) {
-				path = response.paths[i];
+			for (i = 0; i < response.routes[0].legs.length; i++) {
+				path = response.routes[0].legs[i];
 				coordinates = this._decodePolyline(path.points);
 				mappedWaypoints =
 					this._mapWaypointIndices(inputWaypoints, path.instructions, coordinates);
@@ -97,8 +95,8 @@
 					coordinates: coordinates,
 					instructions: this._convertInstructions(path.instructions),
 					summary: {
-						totalDistance: path.distance,
-						totalTime: path.time / 1000,
+						totalDistance: path.summary.lengthInMeters,
+						totalTime: path.summary.travelTimeInSeconds / 1000,
 					},
 					inputWaypoints: inputWaypoints,
 					actualWaypoints: mappedWaypoints.waypoints,
@@ -110,11 +108,11 @@
 		},
 
 		_decodePolyline: function(geometry) {
-			var coords = polyline.decode(geometry, 5),
+			var coords = geometry,
 				latlngs = new Array(coords.length),
 				i;
 			for (i = 0; i < coords.length; i++) {
-				latlngs[i] = new L.LatLng(coords[i][0], coords[i][1]);
+				latlngs[i] = new L.LatLng(coords[i].latitude, coords[i].longitude);
 			}
 
 			return latlngs;
@@ -135,50 +133,23 @@
 		},
 
 		buildRouteUrl: function(waypoints, options) {
-			var computeInstructions =
-				!(options && options.geometryOnly),
-				locs = [],
+			var locs = [],
 				i;
 
 			for (i = 0; i < waypoints.length; i++) {
-				locs.push('point=' + waypoints[i].latLng.lat + ',' + waypoints[i].latLng.lng);
+				locs.push(waypoints[i].latLng.lat + ',' + waypoints[i].latLng.lng);
 			}
 
-			return this.options.serviceUrl + '?' +
-				locs.join('&') +
-				'&instructions=' + computeInstructions +
-				'&type=json' +
-				'&key=' + this._apiKey;
+			return this.options.serviceUrl + '/' +
+				locs.join(':') +
+				'/jsonp' +
+				'?key=' + this._apiKey;
 		},
 
 		_convertInstructions: function(instructions) {
-			var signToType = {
-					'-3': 'SharpLeft',
-					'-2': 'Left',
-					'-1': 'SlightLeft',
-					0: 'Straight',
-					1: 'SlightRight',
-					2: 'Right',
-					3: 'SharpRight',
-					4: 'DestinationReached',
-					5: 'WaypointReached',
-					6: 'Roundabout'
-				},
-				result = [],
-			    i,
-			    instr;
+			var result = [];
 
-			for (i = 0; i < instructions.length; i++) {
-				instr = instructions[i];
-				result.push({
-					type: signToType[instr.sign],
-					text: instr.text,
-					distance: instr.distance,
-					time: instr.time / 1000,
-					index: instr.interval[0],
-					exit: instr.exit_number
-				});
-			}
+			// tomtom don't provide any instructions :(
 
 			return result;
 		},
@@ -191,17 +162,6 @@
 
 			wpIndices.push(0);
 			wps.push(new L.Routing.Waypoint(coordinates[0], waypoints[0].name));
-
-			for (i = 0; i < instructions.length; i++) {
-				if (instructions[i].sign === 5) { // VIA_REACHED
-					idx = instructions[i].interval[0];
-					wpIndices.push(idx);
-					wps.push({
-						latLng: coordinates[idx],
-						name: waypoints[wps.length + 1].name
-					});
-				}
-			}
 
 			wpIndices.push(coordinates.length - 1);
 			wps.push({
@@ -216,9 +176,9 @@
 		}
 	});
 
-	L.Routing.graphHopper = function(apiKey, options) {
-		return new L.Routing.GraphHopper(apiKey, options);
+	L.Routing.tomTom = function(apiKey, options) {
+		return new L.Routing.TomTom(apiKey, options);
 	};
 
-	module.exports = L.Routing.GraphHopper;
+	module.exports = L.Routing.TomTom;
 })();

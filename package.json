@@ -1,8 +1,8 @@
 {
-  "name": "lrm-graphhopper",
-  "version": "1.0.3",
-  "description": "Support for GraphHopper in Leaflet Routing Machine",
-  "main": "src/L.Routing.GraphHopper.js",
+  "name": "lrm-tomtom",
+  "version": "1.0.0",
+  "description": "Support for TomTom in Leaflet Routing Machine",
+  "main": "src/L.Routing.TomTom.js",
   "scripts": {
     "dist": "./scripts/dist.sh",
     "publish": "./scripts/publish.sh",
@@ -11,20 +11,19 @@
   "keywords": [
     "leaflet",
     "routing",
-    "graphhopper"
+    "tomtom"
   ],
-  "author": "Per Liedman <per@liedman.net>",
+  "author": "Mathias Rohnstock <m.rohnstock@gmail.com>",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/perliedman/lrm-graphhopper.git"
+    "url": "https://github.com/drmonty/lrm-tomtom.git"
   },
-  "homepage": "https://github.com/perliedman/lrm-graphhopper",
-  "bugs": "https://github.com/perliedman/lrm-graphhopper/issues",
+  "homepage": "https://github.com/drmonty/lrm-tomtom",
+  "bugs": "https://github.com/drmonty/lrm-tomtom/issues",
   "dependencies": {
     "corslite": "0.0.6",
-    "leaflet": "^0.7.3",
-    "polyline": "0.0.3"
+    "leaflet": "^0.7.3"
   },
   "browserify-shim": {
     "leaflet": "global:L"
