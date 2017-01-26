@@ -9,7 +9,18 @@
 	L.Routing.TomTom = L.Class.extend({
 		options: {
 			serviceUrl: 'https://api.tomtom.com/routing/1/calculateRoute',
-			timeout: 30 * 1000
+			timeout: 30 * 1000,
+			routeType: 'fastest', // fastest, shortest, eco, thrilling
+			traffic: true,
+			avoid: "", // [tollRoads, motorways, ferries, unpavedRoads, carpools, alreadyUsedRoads]
+			travelMode: 'car', // car, truck, taxi, bus, van, motorcycle, bicycle, pedestrian
+			vehicleMaxSpeed: 0, // km/h
+			vehicleWeight: 0, // kg
+			vehicleAxleWeight: 0, // kg
+			vehicleLength: 0, // m
+			vehicleWidth: 0, // m
+			vehicleHeight: 0, // m
+			vehicleCommercial: false
 		},
 
 		initialize: function(apiKey, options) {
@@ -59,7 +70,7 @@
 					} else {
 						callback.call(context || callback, {
 							status: -1,
-							message: 'HTTP request failed: ' + err
+							message: 'HTTP request failed: ' + JSON.parse(err.responseText).error.description
 						});
 					}
 				}
@@ -138,16 +149,32 @@
 
 		buildRouteUrl: function(waypoints, options) {
 			var locs = [],
-				i;
+				i,
+				url = "",
+				_options = {
+							routeType: this.options.routeType,
+							traffic: this.options.traffic,
+							avoid: this.options.avoid,
+							travelMode: this.options.travelMode,
+							vehicleMaxSpeed: this.options.vehicleMaxSpeed,
+							vehicleWeight: this.options.vehicleWeight,
+							vehicleAxleWeight: this.options.vehicleAxleWeight,
+							vehicleLength: this.options.vehicleLength,
+							vehicleWidth: this.options.vehicleWidth,
+							vehicleHeight: this.options.vehicleHeight,
+							vehicleCommercial: this.options.vehicleCommercial
+					};
 
-			for (i = 0; i < waypoints.length; i++) {
+			if (_options.avoid == "" || _options.avoid == [])
+                delete _options.avoid;
+
+			for (i = 0; i < waypoints.length; i++)
 				locs.push(waypoints[i].latLng.lat + ',' + waypoints[i].latLng.lng);
-			}
 
-			return this.options.serviceUrl + '/' +
-				locs.join(':') +
-				'/json' +
-				'?key=' + this._apiKey;
+			return this.options.serviceUrl + '/' + locs.join(':') + '/json?key=' +
+					this._apiKey + '&' + Object.keys(_options).map(function(k) {
+						return encodeURIComponent(k) + '=' + encodeURIComponent(_options[k])
+					}).join('&');
 		},
 
 		_convertInstructions: function(summaries) {

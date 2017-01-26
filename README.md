@@ -32,8 +32,26 @@ require('leaflet-routing-machine');
 require('lrm-tomtom'); // This will tack on the class to the L.Routing namespace
 
 L.Routing.control({
-    router: new L.Routing.TomTom('your TomTom API key'),
+    router: new L.Routing.TomTom('your TomTom API key', options),
 }).addTo(map);
 ```
 
 Note that you will need to pass a valid TomTom API key to the constructor.
+
+## Options
+
+Some of the available options from [TomTom Online Routing](https://developer.tomtom.com/online-routing/online-routing-documentation) are supported:
+
+* routeType: string (fastest, shortest, eco, thrilling)
+* traffic: boolean
+* avoid: string / array (tollRoads, motorways, ferries, unpavedRoads, carpools, alreadyUsedRoads)
+* travelMode: string (car, truck, taxi, bus, van, motorcycle, bicycle, pedestrian)
+* vehicleMaxSpeed: int (in km/h)
+* vehicleWeight: int (in kg)
+* vehicleAxleWeight: int (in kg)
+* vehicleLength: int (in m)
+* vehicleWidth: int (in m)
+* vehicleHeight: int (in m)
+* vehicleCommercial: boolean
+
+See [TomTom Online Routing Documentation](https://developer.tomtom.com/online-routing/online-routing-documentation) for further informations.
