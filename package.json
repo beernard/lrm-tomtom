@@ -1,6 +1,6 @@
 {
   "name": "lrm-tomtom",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Support for TomTom in Leaflet Routing Machine",
   "main": "src/L.Routing.TomTom.js",
   "scripts": {

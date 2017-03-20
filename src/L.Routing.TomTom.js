@@ -20,6 +20,8 @@
 			vehicleLength: 0, // m
 			vehicleWidth: 0, // m
 			vehicleHeight: 0, // m
+			departAt: "", // YYYY-MM-DD\THH:mm:ss
+			arriveAt: "", // YYYY-MM-DD\THH:mm:ss
 			vehicleCommercial: false
 		},
 
@@ -162,11 +164,19 @@
 							vehicleLength: this.options.vehicleLength,
 							vehicleWidth: this.options.vehicleWidth,
 							vehicleHeight: this.options.vehicleHeight,
+							departAt: this.options.departAt,
+							arriveAt: this.options.arriveAt,
 							vehicleCommercial: this.options.vehicleCommercial
 					};
 
 			if (_options.avoid == "" || _options.avoid == [])
                 delete _options.avoid;
+
+            if (_options.departAt.match(/^(\d{4})\-(\d{2})\-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/) === null)
+            	delete _options.departAt;
+
+            if (_options.arriveAt.match(/^(\d{4})\-(\d{2})\-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/) === null)
+            	delete _options.arriveAt;
 
 			for (i = 0; i < waypoints.length; i++)
 				locs.push(waypoints[i].latLng.lat + ',' + waypoints[i].latLng.lng);

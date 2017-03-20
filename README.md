@@ -52,6 +52,8 @@ Some of the available options from [TomTom Online Routing](https://developer.tom
 * vehicleLength: int (in m)
 * vehicleWidth: int (in m)
 * vehicleHeight: int (in m)
+* departAt: string (YYYY-MM-DD\THH:mm:ss, i.e. 2017-03-20T20:00:15)
+* arriveAt: string (YYYY-MM-DD\THH:mm:ss)
 * vehicleCommercial: boolean
 
 See [TomTom Online Routing Documentation](https://developer.tomtom.com/online-routing/online-routing-documentation) for further informations.
