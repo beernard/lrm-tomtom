@@ -43,6 +43,8 @@ Note that you will need to pass a valid TomTom API key to the constructor.
 Some of the available options from [TomTom Online Routing](https://developer.tomtom.com/online-routing/online-routing-documentation) are supported:
 
 * routeType: string (fastest, shortest, eco, thrilling)
+* language: string (en-GB)
+* instructionsType: string (coded, text, tagged)
 * traffic: boolean
 * avoid: string / array (tollRoads, motorways, ferries, unpavedRoads, carpools, alreadyUsedRoads)
 * travelMode: string (car, truck, taxi, bus, van, motorcycle, bicycle, pedestrian)

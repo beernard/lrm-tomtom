@@ -1,6 +1,6 @@
 {
   "name": "lrm-tomtom",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Support for TomTom in Leaflet Routing Machine",
   "main": "src/L.Routing.TomTom.js",
   "scripts": {
@@ -16,10 +16,10 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/drmonty/lrm-tomtom.git"
+    "url": "https://github.com/mrohnstock/lrm-tomtom.git"
   },
-  "homepage": "https://github.com/drmonty/lrm-tomtom",
-  "bugs": "https://github.com/drmonty/lrm-tomtom/issues",
+  "homepage": "https://github.com/mrohnstock/lrm-tomtom",
+  "bugs": "https://github.com/mrohnstock/lrm-tomtom/issues",
   "dependencies": {
     "corslite": "0.0.6",
     "leaflet": "^0.7.3"
