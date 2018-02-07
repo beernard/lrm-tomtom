@@ -232,7 +232,7 @@
                 idx;
 
             wpIndices.push(0);
-            wps.push(new L.Routing.Waypoint(coordinates[0], waypoints[0].name));
+            wps.push({ latLng: coordinates[0], name: waypoints[0].name });
 
             for (i = 0; i < instructions.length; i++) {
                 if (instructions[i].type === "WaypointReached") {
